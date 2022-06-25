@@ -1,2 +1,2 @@
 # Continuous-Delivery
-Enabling continuous delivery with deployment pipelines using Circleci.
+Enabling continuous delivery with deployment pipelines using circleci.
