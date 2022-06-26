@@ -28,6 +28,9 @@ jobs:
               --template-file instance.yml \
               --stack-name myStack \
               --region us-east-1
+      - run: return 1
+      - destroy_environment
+
   # Exercise: Config and Deployment
   configure_infrastructure: 
     docker:
@@ -79,8 +82,7 @@ jobs:
 workflows:
   my_workflow:
       jobs:
-        #- create_infrastructure
+        - create_infrastructure
         #- configure_infrastructure
-        - smoke_test
-            requies:
-              - create_infrastructure
+        #- smoke_test
+        
