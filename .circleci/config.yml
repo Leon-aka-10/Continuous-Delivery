@@ -28,7 +28,7 @@ jobs:
               --template-file instance.yml \
               --stack-name myStack \
               --region us-east-1
-      #- run: return 1
+      - run: return 1
       - destroy_environment
 
   # Exercise: Config and Deployment
