@@ -4,6 +4,17 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
+commands:
+  # Exercise - Rollback
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack
+
 jobs:
   create_infrastructure: 
     docker:
@@ -35,28 +46,39 @@ jobs:
           command: |
             ansible-playbook -i inventory.txt main.yml
   # Exercise: Smoke Testing
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - run: apk add --update curl
-      - run:
-          name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
+  #smoke_test:
+    #docker:
+      #- image: alpine:latest
+    #steps:
+      #- run: apk add --update curl
+      #- run:
+          #name: smoke test
+          #command: |
+            #URL="https://blog.udacity.com/"
             # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+            #if curl -s --head ${URL} 
+            #then
+              #return 0
+            #else
+              #return 1
+            #fi
+
+  # Exercise: Smoke Testing
+  smoke_test:
+  docker:
+    - image: alpine:latest
+  steps:
+    - run:
+        name: Test job
+        # Fail the job intentionally to simulate an error.
+        command:  return 1
+    - destroy_environment  
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   my_workflow:
       jobs:
-        #- create_infrastructure
+        - create_infrastructure
         #- configure_infrastructure
         - smoke_test
